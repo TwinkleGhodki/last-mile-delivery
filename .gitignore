@@ -4,5 +4,9 @@ dist/
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+.next/
+out/
+.vscode/
+.idea/
 .DS_Store
 *.log
