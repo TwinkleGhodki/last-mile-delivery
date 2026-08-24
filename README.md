@@ -16,6 +16,20 @@ schema is plain SQL so swapping to Postgres later only means changing the
 
 ---
 
+### Demo workflow
+
+1. Open the live frontend.
+2. Log in as the customer.
+3. Create an order using the available sample pincodes.
+4. Review the automatically calculated charge.
+5. Confirm the order.
+6. Log in as the admin and assign the order to an available agent.
+7. Log in as the assigned agent and update the delivery status.
+8. Log back in as the customer to view the tracking timeline.
+9. For a failed delivery, provide a failure reason and use the reschedule flow.
+
+---
+
 ## Live Demo
 
 - **Frontend:** https://last-mile-delivery-sigma.vercel.app
