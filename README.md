@@ -2,8 +2,9 @@
 
 A delivery management platform: customers place orders with auto-calculated
 charges, admins manage zones/rate cards and assign agents (manually or
-automatically), agents update delivery status, and customers get emailed
-at every step and can track and reschedule failed deliveries.
+automatically), agents update delivery status, and customers can track and
+reschedule failed deliveries. Email/SMS notifications are supported through
+the notification layer and can be configured with SMTP/Twilio credentials.
 
 **Stack:** Node.js + Express + SQLite (`better-sqlite3`) backend · React
 (Vite) frontend · JWT role-based auth (customer / agent / admin).
@@ -12,6 +13,15 @@ SQLite was chosen deliberately for this assignment: zero external setup,
 runs identically on your laptop and on Render/Railway's free tiers, and the
 schema is plain SQL so swapping to Postgres later only means changing the
 `db.js` driver, not the data model.
+
+---
+
+## Live Demo
+
+- **Frontend:** https://last-mile-delivery-sigma.vercel.app
+- **Backend API:** https://last-mile-delivery.onrender.com
+- **API Health Check:** https://last-mile-delivery.onrender.com/api/health
+- **GitHub Repository:** https://github.com/TwinkleGhodki/last-mile-delivery
 
 ---
 
@@ -107,30 +117,39 @@ SMS is mocked the same way by default. To wire up Twilio's free trial,
 
 ---
 
-## 3. Deploying (Render / Railway / Vercel)
+## 3. Deployment
 
-**Backend (Render or Railway):**
-1. Push this repo to GitHub.
-2. New Web Service → point at `/backend` as the root directory.
-3. Build command: `npm install`. Start command: `npm run seed && npm start`
-   (runs the idempotent seed once, then starts the API — seed skips
-   anything already inserted, so it's safe to include in every deploy).
-4. Add the environment variables from `.env.example` (set a real
-   `JWT_SECRET`; add SMTP vars if you want real emails).
-5. Note the deployed URL, e.g. `https://your-app.onrender.com`.
+### Live deployment
 
-**Frontend (Vercel or Render Static Site):**
-1. New project → point at `/frontend` as the root directory.
-2. Build command: `npm run build`. Output directory: `dist`.
-3. Set `VITE_API_URL=https://your-app.onrender.com/api` as an environment
-   variable (must be set at build time for Vite).
-4. Deploy — you'll get a URL like `https://your-app.vercel.app`.
+The application is deployed as a separate frontend and backend:
 
-Note on SQLite + hosting: Render/Railway's free web-service disks are
-ephemeral on redeploy. That's fine for a demo/assignment; for a persistent
-production database, either use Render's persistent disk add-on or point
-`db.js` at a hosted Postgres/MySQL instance instead — the schema in
-`schema.sql` is plain SQL and translates directly.
+- **Frontend:** https://last-mile-delivery-sigma.vercel.app
+- **Backend API:** https://last-mile-delivery.onrender.com
+- **Health Check:** https://last-mile-delivery.onrender.com/api/health
+
+### Backend — Render
+
+The backend is deployed from the `/backend` directory.
+
+- Build command: `npm install`
+- Start command: `npm start`
+- `JWT_SECRET` is configured as an environment variable.
+- SQLite is used for the deployed demo database.
+
+### Frontend — Vercel
+
+The frontend is deployed from the `/frontend` directory.
+
+- Framework: Vite
+- Build command: `npm run build`
+- Output directory: `dist`
+- `VITE_API_URL` is configured as:
+
+`https://last-mile-delivery.onrender.com/api`
+
+### SQLite hosting note
+
+The deployed demo uses SQLite. Render's free web-service filesystem is ephemeral, so database contents may reset after a redeploy or service restart. This is acceptable for the assignment/demo deployment. For production use, the application can be migrated to PostgreSQL or another persistent database.
 
 ---
 
@@ -274,7 +293,11 @@ Summary of tables:
 
 ## 9. API reference
 
-Base URL: `/api`. All endpoints except `/auth/register` and `/auth/login`
+**Local Base URL:** `http://localhost:4000/api`
+
+**Production Base URL:** `https://last-mile-delivery.onrender.com/api`
+
+All endpoints except `/auth/register` and `/auth/login`
 require `Authorization: Bearer <token>`.
 
 ### Auth
